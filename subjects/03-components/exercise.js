@@ -36,25 +36,65 @@ styles.panel = {
   padding: 10
 };
 
+var {arrayOf, number, shape, string} = React.PropTypes;
+var data = shape({
+  id: number.isRequired,
+  name: string,
+  description: string
+});
+
+
+/*
+  TODO: specify the shape of data so that Tabs knows nothing about countries
+*/
 var Tabs = React.createClass({
+  propTypes: {
+    data: arrayOf(data)
+  },
+  getInitialState () {
+    return {
+      selectedTab: 0
+    };
+  },
+  selectTab(index) {
+    this.setState({
+      selectedTab: index
+    });
+  },
+  tabs () {
+    return this.props.data.map((datum, index) => {
+      return (
+        <div
+          key = {datum.id}
+          className="Tab"
+          style={datum.id === this.props.data[this.state.selectedTab].id ? styles.activeTab : styles.tab}
+          onClick = { () => { this.selectTab(index); } } >
+          {datum.name}
+        </div>
+      )
+    });
+  },
+  descriptionPanel(datum) {
+    return (
+      <div className="TabPanels" style={styles.panel}>
+        { datum.description }
+      </div>
+    );
+  },
   render () {
     return (
       <div className="Tabs">
-        <div className="Tab" style={styles.tab}>
-          Inactive
-        </div>
-        <div className="Tab" style={styles.activeTab}>
-          Active
-        </div>
-        <div className="TabPanels" style={styles.panel}>
-          Panel
-        </div>
+        {this.tabs()}
+        {this.descriptionPanel(this.props.data[this.state.selectedTab])}
       </div>
     );
   }
 });
 
 var App = React.createClass({
+  propTypes: {
+    countries: arrayOf(data)
+  },
   render () {
     return (
       <div>

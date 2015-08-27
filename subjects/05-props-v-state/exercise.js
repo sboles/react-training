@@ -24,22 +24,19 @@ var data = require('./lib/data');
 var Tabs = React.createClass({
 
   propTypes: {
-    data: React.PropTypes.array.isRequired
-  },
-
-  getInitialState() {
-    return {
-      activeTabIndex: 0
-    };
+    data: React.PropTypes.array.isRequired,
+    activeTabIndex: React.PropTypes.number
   },
 
   handleTabClick(activeTabIndex) {
-    this.setState({ activeTabIndex });
+    if(this.props.handleTabClick) {
+      this.props.handleTabClick(activeTabIndex);
+    }
   },
 
   renderTabs() {
     return this.props.data.map((tab, index) => {
-      var style = this.state.activeTabIndex === index ?
+      var style = this.props.activeTabIndex === index ?
         styles.activeTab : styles.tab;
       var clickHandler = this.handleTabClick.bind(this, index);
       return (
@@ -51,7 +48,7 @@ var Tabs = React.createClass({
   },
 
   renderPanel() {
-    var tab = this.props.data[this.state.activeTabIndex];
+    var tab = this.props.data[this.props.activeTabIndex];
     return (
       <div>
         <p>{tab.description}</p>
@@ -74,13 +71,81 @@ var Tabs = React.createClass({
 
 });
 
+var makeTabs = (Tabs) => {
+  return React.createClass({
+    getInitialState() {
+      return {
+        activeTabIndex: 0
+      };
+    },
+
+    handleTabClick(activeTabIndex) {
+      this.setState({ activeTabIndex });
+    },
+
+    render() {
+      return (
+        <Tabs
+          {...this.props}
+          activeTabIndex={this.state.activeTabIndex}
+          handleTabClick={this.handleTabClick}
+        />
+      );
+    }
+  });
+}
+
 var App = React.createClass({
 
+  getInitialState() {
+    return {
+      activeTabIndex: 0
+    };
+  },
+
+  handleTabClick(activeTabIndex) {
+    this.setState({ activeTabIndex });
+  },
+
+  startOver() {
+    this.setState({ activeTabIndex:0 });
+  },
+
+  next() {
+    if(this.state.activeTabIndex < data.length-1) {
+      this.setState({ activeTabIndex:this.state.activeTabIndex+1 });
+    }
+  },
+
+  finish() {
+    this.setState({ activeTabIndex:data.length-1 });
+  },
+
+  previous() {
+    if(this.state.activeTabIndex > 0) {
+      this.setState({ activeTabIndex:this.state.activeTabIndex-1 });
+    }
+  },
+
   render() {
+    var StatefulTabs = makeTabs(Tabs);
     return (
       <div>
         <h1>Props v. State</h1>
-        <Tabs ref="tabs" data={this.props.tabs}/>
+        <button onClick={this.startOver}>Start Over</button>
+        <button onClick={this.previous}>Previous</button>
+        <button onClick={this.next}>Next</button>
+        <button onClick={this.finish}>Finish</button>
+        <Tabs
+          ref="tabs"
+          data={this.props.tabs}
+          activeTabIndex={this.state.activeTabIndex}
+          handleTabClick={this.handleTabClick}
+        />
+        <StatefulTabs
+          ref="statefultabs"
+          data={this.props.tabs}
+        />
       </div>
     );
   }

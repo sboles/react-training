@@ -37,6 +37,11 @@ form {
   border-bottom: 1px solid #333;
 }
 
+.scrollbox {
+  overflow: auto;
+  flex: 1;
+}
+
 .messages {
   overflow: auto;
   flex: 1;

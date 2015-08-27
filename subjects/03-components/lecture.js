@@ -257,6 +257,10 @@ updateThePage();
 //   render() {
 //     return (
 //       <div>
+/********************
+ Can this be made into its own component????
+ yes, but you need to mutate props.children to add a handler to the children elements 
+ */
 //         <p>Toggle count: {this.state.numToggles}</p>
 //         <ContentToggle summary="Tacos" onToggle={this.handleToggle}>
 //           <p>

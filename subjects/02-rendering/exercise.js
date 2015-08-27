@@ -27,10 +27,24 @@ var DATA = {
   ]
 };
 
+var renderItems = (items) => {
+  return items
+    .sort(sortBy('name'))
+    .filter((item) => {
+      return item.type === 'mexican';
+    })
+    .map((item) => {
+      return <li>{item.name}</li>;
+  });
+}
+
 function render() {
   return (
     <div>
-      Open the console, you have failing tests
+      <h1>{DATA.title}</h1>
+      <ul>
+      { renderItems(DATA.items) }
+      </ul>
     </div>
   );
 }
