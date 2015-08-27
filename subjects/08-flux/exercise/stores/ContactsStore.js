@@ -38,6 +38,17 @@ ContactsStore.dispatchToken = AppDispatcher.register(function (payload) {
       loaded: true,
       contacts: action.contacts
     });
+  } else if (action.type === ActionTypes.CONTACT_DELETED) {
+    setState({
+      contacts: state.contacts.filter((c) => { return c.id != action.contact.id})
+    });
+  } else if (action.type === ActionTypes.ERROR_DELETING) {
+    setState({
+      error: {
+        error: action.err,
+        contact: action.contact
+      }
+    });
   }
 });
 

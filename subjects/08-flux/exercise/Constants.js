@@ -5,7 +5,9 @@ module.exports = {
   API: 'http://addressbook-api.herokuapp.com',
 
   ActionTypes: keyMirror({
+    CONTACT_DELETED: null,
     CONTACTS_LOADED: null,
+    DELETE_CONTACT: null,
     LOAD_CONTACTS: null
   }),
 

@@ -11,7 +11,11 @@ var APIUtils = {
 
   deleteContact: function (contact) {
     xhr.deleteJSON(`${API}/contacts/${contact.id}`, function (err, res) {
-      ServerActionCreators.deletedContact(contact);
+      if(err) {
+        ServerActionCreators.receivedErrorDeletingContact(contact, err);
+      } else {
+        ServerActionCreators.deletedContact(contact);
+      }
     });
   }
 };
